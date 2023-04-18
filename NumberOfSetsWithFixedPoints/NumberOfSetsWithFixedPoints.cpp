@@ -25,7 +25,19 @@ uint numOfSetsNoFixedPts(uint n)
 */
 uint NumOfCombOfmFromN(uint n, uint m)
 {
-	return m;
+	uint k = n - m; // значение факториала, на который мы сократим знаменатель
+	if (m > k)
+		m = k;
+	if (!m) // если m = 0
+		return 1;
+	uint numerator = k = n + 1 - m, denominator = 1; // числитель и знаменатель после сокращения факториалов
+	k++;
+	for (uint i = 2; i <= m; i++, k++)
+	{
+		numerator *= k;
+		denominator *= i;
+	}
+	return numerator / denominator;
 }
 /*! вычисляет количество перестановок длиной n с m неподвижными точками
 * \param[in] n - длина перестановки
