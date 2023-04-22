@@ -10,10 +10,38 @@ namespace NumOfSetsFixedPtstest
 	{
 	public:
 		
-		TEST_METHOD(TestMethod1)
+		TEST_METHOD(FirstArgumentGreaterThanSecond)
 		{
-			uint value = NumOfSetsFixedPts(7,7);
-			uint exp_value = 7;
+			uint value = NumOfSetsFixedPts(9,5);
+			uint exp_value = 1134;
+			Assert::AreEqual(value, exp_value);
+		}
+
+		TEST_METHOD(ArgumnetsAreEqual)
+		{
+			uint value = NumOfSetsFixedPts(5, 5);
+			uint exp_value = 1;
+			Assert::AreEqual(value, exp_value);
+		}
+
+		TEST_METHOD(SecondArgumentIsZero)
+		{
+			uint value = NumOfSetsFixedPts(9, 0);
+			uint exp_value = 133496;
+			Assert::AreEqual(value, exp_value);
+		}
+
+		TEST_METHOD(ArgumentsAreZero)
+		{
+			uint value = NumOfSetsFixedPts(0, 0);
+			uint exp_value = 1;
+			Assert::AreEqual(value, exp_value);
+		}
+
+		TEST_METHOD(StandartTest)
+		{
+			uint value = NumOfSetsFixedPts(9, 2);
+			uint exp_value = 66744;
 			Assert::AreEqual(value, exp_value);
 		}
 	};
