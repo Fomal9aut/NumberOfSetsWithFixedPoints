@@ -38,7 +38,7 @@ namespace NumOfCombOfmFromNtest
 			Assert::AreEqual(value, exp_value);
 		}
 
-		TEST_METHOD(ComplexTest)
+		TEST_METHOD(StandartTest)
 		{
 			uint value = NumOfCombOfmFromN(9, 2);
 			uint exp_value = 36;

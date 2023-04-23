@@ -10,6 +10,7 @@ int main()
     std::cout << "Hello World!\n";
 }
 
+
 /*! вычисляет количество перестановок длиной n без неподвижных точек
 * \param[in] n - длина перестановки
 * \param[out] - количество перестановок
@@ -32,7 +33,7 @@ uint NumOfCombOfmFromN(uint n, uint m)
 		return 1;
 	uint numerator = k = n + 1 - m, denominator = 1; // числитель и знаменатель после сокращения факториалов
 	k++;
-	for (uint i = 2; i <= m; i++, k++)
+	for (uint i = 2; i <= m; i++, k++) // циклически вычисляем значения числителя и знаменателя
 	{
 		numerator *= k;
 		denominator *= i;
@@ -46,5 +47,5 @@ uint NumOfCombOfmFromN(uint n, uint m)
 */
 uint NumOfSetsFixedPts(uint n, uint m)
 {
-	return n;
+	return m;
 }
