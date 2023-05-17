@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 	char buff[50] = "";		
 	// считываем данные из файла, путь которого указан в параметрах запуска программы
 	std::ifstream fin(argv[1]);	
-	// создаем выходной файл по пути, указанному в аргументах запуска программы
+	// создаем выходной файл по пути, указанному в параметрах запуска программы
 	std::ofstream fout(argv[2]);
 
 	// если файл с входными данными успешно открыт
@@ -39,8 +39,9 @@ int main(int argc, char *argv[])
 		if (ptr1 == NULL)						
 		{		
 			fout << "Недопустимый формат входных данных: отсутствует аргумент\n";
+			return 1;
 		}
-		else {
+	
 			// приводим первый аргумент к числу	
 			FirstArgument = atoi(ptr1);			
 			// если аргумент успешно приведен к числу, считаем что он прошел проверку, иначе выводим ошибку
@@ -51,18 +52,21 @@ int main(int argc, char *argv[])
 			else
 			{
 				fout << "Недопустимые входные данные: операнд должен быть натуральным десятичным числом, отличным от нуля\n";
+				return 1;
 			}			
-		}
+		
 			// получаем второй аргумент из строки
 			char* ptr2 = strtok(NULL, " ");		
 			// если второй аргумент получить не удалось
 			//(правая часть условия нужна для предотвращения повторного вывода ошибки при отсутствии обоих аргументов)
-			if (ptr2 == NULL && ptr1 != NULL)		
+			if (ptr2 == NULL)		
 			{
 				fout << "Недопустимый формат входных данных: отсутствует аргумент\n";
+				return 1;
 			}
+			
 			// проверка второго аргумента имеет смысл, только если первый прошел проверку
-			else if((InputFlagFirstArgument == 1))  
+			if(InputFlagFirstArgument == 1) 
 			{
 				// приводим второй аргумент к числу
 				SecondArgument = atoi(ptr2);		
@@ -76,6 +80,7 @@ int main(int argc, char *argv[])
 				else
 				{
 					fout << "Недопустимые входные данные: операнд должен быть натуральным десятичным числом\n";
+					return 1;
 				}
 				
 			}
@@ -87,22 +92,21 @@ int main(int argc, char *argv[])
 			if (FirstArgument < 0 || FirstArgument > 9)						
 			{
 				fout << "операнд n = " << FirstArgument << " вне диапазона [1..9].\n";
+				return 1;
 			}
-			else {
 
-				// проверяем, удовлетворяет ли второй аргумент диапазону
-				if (SecondArgument < 0 || SecondArgument > FirstArgument)					
-				{
-					fout << "операнд k = " << SecondArgument << " вне диапазона [0.." << FirstArgument << "]\n";
-				}
-				else {			
-					// выводим результат функции в файл
-					fout << NumOfSetsFixedPts(FirstArgument, SecondArgument);
-					fout.close();
-				}
+			// проверяем, удовлетворяет ли второй аргумент диапазону
+			if (SecondArgument < 0 || SecondArgument > FirstArgument)					
+			{
+				fout << "операнд k = " << SecondArgument << " вне диапазона [0.." << FirstArgument << "]\n";
+				return 1;
 			}
+			
+			// выводим результат функции в файл
+			fout << NumOfSetsFixedPts(FirstArgument, SecondArgument);
+			fout.close();
+			
 		 }
-
 	}
 	else
 	{
@@ -113,47 +117,47 @@ int main(int argc, char *argv[])
 }
 
 
-/*! вычисляет количество перестановок длиной n без неподвижных точек
-* \param[in] n - длина перестановки
-* \param[out] - количество перестановок
-*/
+
 uint numOfSetsNoFixedPts(uint n)
 {
 	// для вычисления результата достаточно знать последние два вычесленных значения
-	uint oddIndex = 0, evenIndex = 1;			   // oddIndex хранит предпоследнее вычисленное значение с нечетным индексом, evenIndex - последнее с четным индексом
+	// oddIndex хранит предпоследнее вычисленное значение с нечетным индексом, evenIndex - последнее с четным индексом
+	uint oddIndex = 0, evenIndex = 1;			   
 	for (uint i = 2; i < n; i++)
-		if (i % 2)								   // если данная итерация нечетная  
-			evenIndex = i * (oddIndex + evenIndex);// значение вычисляется и записывается в evenIndex
-		else									   // иначе
-			oddIndex = i * (oddIndex + evenIndex); // значение вычисляется и записывается в oddIndex
-	return n % 2 ? oddIndex : evenIndex;		   // через четность определяется какое значение возвращать
+		// если данная итерация нечетная, то значение вычисляется и записывается в evenIndex, иначе - в  oddIndex
+		if (i % 2)								  
+		{
+			evenIndex = i * (oddIndex + evenIndex);
+		}
+		else									   
+		{
+			oddIndex = i * (oddIndex + evenIndex);
+		}
+	// через четность входного параметра определяется какое значение возвращать
+	return n % 2 ? oddIndex : evenIndex;		   
 }
-/*! вычисляет количество перестановок длиной n без неподвижных точек
-* \param[in] n - общее количество элементов
-* \param[in] m - количество элементов выборки
-* \param[out] numerator / denominator - значение сочетаний из n по m
-*/
+
 uint NumOfCombOfmFromN(uint n, uint m)
 {
-	uint k = n - m;									 // вычисляем значение, на которое нужно сократить факториалы для более эффективного вычисления
+	// вычисляем значение, на которое нужно сократить факториалы для более эффективного вычисления
+	uint k = n - m;									 
 	if (m > k)
-		m = k;											
-	if (!m)											 // если число элементов из выборки 0
+		m = k;										
+	// если число элементов из выборки 0
+	if (!m)											 
 		return 1;
-	uint numerator = k = n + 1 - m, denominator = 1; // числитель и знаменатель после сокращения факториалов
+	// числитель и знаменатель после сокращения факториалов
+	uint numerator = k = n + 1 - m, denominator = 1; 
 	k++;
-	for (uint i = 2; i <= m; i++, k++)				 // циклически вычисляем значения числителя и знаменателя
+	// циклически вычисляем значения числителя и знаменателя
+	for (uint i = 2; i <= m; i++, k++)				 
 	{
 		numerator *= k;
 		denominator *= i;
 	}
 	return numerator / denominator;
 }
-/*! вычисляет количество перестановок длиной n с m неподвижными точками
-* \param[in] n - длина перестановки
-* \param[in] m - количество неподвижных точек
-* \param[out] NumOfSetsFixedPts - число перестановок длиной n с m неподвижными точками
-*/
+
 uint NumOfSetsFixedPts(uint n, uint m)
 {
 	return NumOfCombOfmFromN(n, m) * numOfSetsNoFixedPts(n - m);
