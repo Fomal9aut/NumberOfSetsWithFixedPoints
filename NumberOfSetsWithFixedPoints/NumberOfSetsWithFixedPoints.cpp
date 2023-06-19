@@ -22,13 +22,15 @@ int main(int argc, char *argv[])
 	else
 	{
 		std::cout << "Невозможно открыть файл\n";
+		fin.close();
 		return 1;
 	}
 
 		char buffCopy[50];
 		// копируем строку для ее проверки
-		strcpy(buffCopy, buff);		
-
+		strcpy(buffCopy, buff);
+		// закрываем поток считывания из файла
+		fin.close();
 		// переменная для хранения первого аргумента
 		uint FirstArgument = 0,		
 		// переменная для хранения второго аргумента
@@ -57,7 +59,7 @@ int main(int argc, char *argv[])
 		else
 		{
 			std::cout << "Недопустимые входные данные: операнд должен быть натуральным десятичным числом, отличным от нуля\n";
-		return 1;
+			return 1;
 		}			
 		
 		// получаем второй аргумент из строки
@@ -78,7 +80,7 @@ int main(int argc, char *argv[])
 			// т.к. второй аргумент может быть 0, то atoi вернет тот же результат, как если бы были переданы неправильные данные
 			// чтобы корректно обрабатывать 0 для второго аргумента, дополнительно проверяем, является ли переданная строка нулем
 			// если второй аргумент успешно преобразован к числу или является нулем, то он прошел проверку
-			if ((SecondArgument != 0) || (SecondArgument == 0 && !strcmp(ptr2, "0")))			
+			if (SecondArgument != 0 || !strcmp(ptr2, "0"))
 			{
 				InputFlagSecondArgument = 1;
 			}
@@ -89,7 +91,7 @@ int main(int argc, char *argv[])
 			}			
 		}
 	
-		 // если оба аргумента успешно прошли проверку
+		// если оба аргумента успешно прошли проверку
 		 if(InputFlagFirstArgument && InputFlagSecondArgument) 
 		 {
 			// проверяем, удовлетворяет ли первый аргумент диапазону
@@ -125,7 +127,7 @@ uint numOfSetsNoFixedPts(uint n)
 	uint oddIndex = 0, evenIndex = 1;			   
 	for (uint i = 2; i < n; i++)
 		// если данная итерация нечетная, то значение вычисляется и записывается в evenIndex, иначе - в  oddIndex
-		if (i % 2)								  
+		if (i & 1)								  
 		{
 			evenIndex = i * (oddIndex + evenIndex);
 		}
