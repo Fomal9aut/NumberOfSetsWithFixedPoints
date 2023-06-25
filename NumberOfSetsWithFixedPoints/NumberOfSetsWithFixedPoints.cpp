@@ -7,6 +7,15 @@
 
 int main(int argc, char *argv[])
 {
+
+	if (argc != 2)
+	{
+		std::cerr << "Неправильно введены параметры запуска"
+			<< "Параметры должны соответствовать шаблону: \n"
+			<< argv[0] << "<path/to/input_file> <path/to/save_file> \n";
+		return 1;
+	}
+
 	setlocale(LC_ALL, "rus");
 	// буфер для хранения входных данных из файла, получаемых строкой
 	char buff[50] = "";		
